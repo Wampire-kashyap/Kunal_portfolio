@@ -7,20 +7,29 @@ const FALLBACK: Experience[] = [
   {
     _id: 'e1', company: 'TechCorp Analytics', role: 'Senior Data Analyst',
     duration: 'Jan 2024 – Present', current: true,
-    description: 'Leading a team of 3 analysts to build executive-level dashboards. Automated 15+ manual reporting workflows, saving 120 hours/month. Driving data strategy for $50M business unit.',
+    description: [
+      'Leading a team of 3 analysts to build executive-level dashboards',
+      'Automating reporting pipelines',
+    ],
     skills: ['Power BI', 'Python', 'SQL', 'Azure'],
   },
   {
     _id: 'e2', company: 'DataBridge Solutions', role: 'Data Analyst',
     duration: 'Jun 2022 – Dec 2023', current: false,
-    description: 'Developed customer segmentation models that improved campaign ROI by 34%. Built real-time KPI tracking dashboards for 5 departments using Power BI and SQL Server.',
+    description: [
+      'Developed customer segmentation models that improved campaign ROI by 34%',
+      'Built real-time KPI tracking dashboards for 5 departments using Power BI and SQL Server',
+    ],
     skills: ['SQL', 'Tableau', 'Python', 'Excel'],
   },
   {
     _id: 'e3', company: 'StartupX', role: 'Junior Data Analyst (Intern → Full-time)',
     duration: 'Aug 2021 – May 2022', current: false,
-    description: 'Started as intern, promoted to full-time within 3 months. Built product analytics from scratch using Python and Google Analytics. Helped raise Series A by providing investor-ready data reports.',
-    skills: ['Python', 'Pandas', 'Google Analytics', 'Looker'],
+    description: [
+      'Started as an intern and promoted to full-time within 3 months',
+      'Built product analytics from scratch using Python and Google Analytics',
+      'Prepared investor-ready data reports that supported Series A funding',
+    ], skills: ['Python', 'Pandas', 'Google Analytics', 'Looker'],
   },
 ]
 
