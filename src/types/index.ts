@@ -3,7 +3,7 @@ export interface Project {
   title: string
   description: string
   tools: string[]
-  image: any
+  image?: any
   github?: string
   liveUrl?: string
   category?: string
