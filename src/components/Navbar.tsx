@@ -149,7 +149,15 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => { setActive(link.href); setOpen(false) }}
+                onClick={(e) => { 
+                  e.preventDefault();
+                  const target = document.querySelector(link.href);
+                  if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                  }
+                  setActive(link.href); 
+                  setOpen(false);
+                }}
                 style={{
                   display: 'block', padding: '1rem 1.5rem',
                   textDecoration: 'none', color: 'rgba(226,232,240,0.8)',
@@ -164,7 +172,19 @@ export default function Navbar() {
               </a>
             ))}
             <div style={{ padding: '1rem 1.5rem' }}>
-              <a href="#contact" className="btn-glow" onClick={() => setOpen(false)} style={{ width: '100%', justifyContent: 'center' }}>
+              <a 
+                href="#contact" 
+                className="btn-glow" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  const target = document.querySelector('#contact');
+                  if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                  }
+                  setOpen(false);
+                }} 
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
                 Hire Me
               </a>
             </div>
