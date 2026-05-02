@@ -1,5 +1,5 @@
 import { client, PROJECTS_QUERY, CERTIFICATES_QUERY, EXPERIENCE_QUERY, ACHIEVEMENTS_QUERY, RESUME_QUERY, VIDEO_RESUME_QUERY, SKILLS_QUERY } from '@/lib/sanity'
-import type { Project, Certificate, Experience, Achievement, Resume, VideoResume, Skill } from '@/types'
+import type { Project, Certificate, Experience as ExperienceType, Achievement, Resume, VideoResume, Skill } from '@/types'
 
 import ClientLayer from '@/components/ClientLayer'
 import Navbar from '@/components/Navbar'
@@ -48,9 +48,9 @@ export default async function HomePage() {
         <About />
         <Skills skills={skills} />
         <ResumeSection resumeUrl={resume?.pdfUrl} videoData={videoResume} />
-        <Projects     projects={projects} />
+        <Projects projects={projects} />
         <Certificates certificates={certificates} />
-        <Experience   experiences={experiences} />
+        <Experience experiences={experiences} />
         <Achievements achievements={achievements} />
         <Contact />
       </main>
