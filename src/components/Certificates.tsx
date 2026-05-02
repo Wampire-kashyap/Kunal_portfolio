@@ -7,21 +7,63 @@ import { urlFor } from '@/lib/sanity'
 import type { Certificate } from '@/types'
 
 const FALLBACK: Certificate[] = [
-  { _id: 'c1', title: 'Google Data Analytics Professional', issuer: 'Google / Coursera', date: '2024-03', category: 'Data Analytics' },
-  { _id: 'c2', title: 'Microsoft Power BI Data Analyst', issuer: 'Microsoft', date: '2024-01', category: 'BI & Visualization' },
-  { _id: 'c3', title: 'IBM Data Science Professional', issuer: 'IBM / Coursera', date: '2023-11', category: 'Data Science' },
-  { _id: 'c4', title: 'Python for Data Science & ML', issuer: 'Udemy', date: '2023-08', category: 'Python' },
-  { _id: 'c5', title: 'SQL for Data Analysis', issuer: 'Mode Analytics', date: '2023-06', category: 'SQL' },
-  { _id: 'c6', title: 'Tableau Desktop Specialist', issuer: 'Tableau', date: '2023-04', category: 'BI & Visualization' },
+  {
+    _id: 'c1',
+    title: 'Google Data Analytics Professional',
+    issuer: 'Google / Coursera',
+    date: '2024-03',
+    category: 'Data Analytics',
+    image: { asset: { url: '/placeholder.png' } }
+  },
+  {
+    _id: 'c2',
+    title: 'Microsoft Power BI Data Analyst',
+    issuer: 'Microsoft',
+    date: '2024-01',
+    category: 'BI & Visualization',
+    image: { asset: { url: '/placeholder.png' } }
+  },
+  {
+    _id: 'c3',
+    title: 'IBM Data Science Professional',
+    issuer: 'IBM / Coursera',
+    date: '2023-11',
+    category: 'Data Science',
+    image: { asset: { url: '/placeholder.png' } }
+  },
+  {
+    _id: 'c4',
+    title: 'Python for Data Science & ML',
+    issuer: 'Udemy',
+    date: '2023-08',
+    category: 'Python',
+    image: { asset: { url: '/placeholder.png' } }
+  },
+  {
+    _id: 'c5',
+    title: 'SQL for Data Analysis',
+    issuer: 'Mode Analytics',
+    date: '2023-06',
+    category: 'SQL',
+    image: { asset: { url: '/placeholder.png' } }
+  },
+  {
+    _id: 'c6',
+    title: 'Tableau Desktop Specialist',
+    issuer: 'Tableau',
+    date: '2023-04',
+    category: 'BI & Visualization',
+    image: { asset: { url: '/placeholder.png' } }
+  },
 ]
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Data Analytics':    '#00f5ff',
-  'BI & Visualization':'#a855f7',
-  'Data Science':      '#3b82f6',
-  'Python':            '#10b981',
-  'SQL':               '#f59e0b',
-  'Machine Learning':  '#ef4444',
+  'Data Analytics': '#00f5ff',
+  'BI & Visualization': '#a855f7',
+  'Data Science': '#3b82f6',
+  'Python': '#10b981',
+  'SQL': '#f59e0b',
+  'Machine Learning': '#ef4444',
 }
 
 export default function Certificates({ certificates }: { certificates: Certificate[] }) {
@@ -64,7 +106,7 @@ export default function Certificates({ certificates }: { certificates: Certifica
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8">
-                        <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+                        <circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
                       </svg>
                     </div>
                     {cert.date && (
