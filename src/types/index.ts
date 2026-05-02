@@ -15,7 +15,7 @@ export interface Certificate {
   _id: string
   title: string
   issuer: string
-  image: any
+  image?: any
   file?: {
     asset: { url: string }
   }
