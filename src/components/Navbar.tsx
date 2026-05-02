@@ -151,12 +151,17 @@ export default function Navbar() {
                 href={link.href}
                 onClick={(e) => { 
                   e.preventDefault();
-                  const target = document.querySelector(link.href);
-                  if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                  }
                   setActive(link.href); 
                   setOpen(false);
+                  
+                  setTimeout(() => {
+                    const target = document.querySelector(link.href);
+                    if (target) {
+                      const yOffset = -70; 
+                      const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                  }, 50);
                 }}
                 style={{
                   display: 'block', padding: '1rem 1.5rem',
@@ -177,11 +182,16 @@ export default function Navbar() {
                 className="btn-glow" 
                 onClick={(e) => {
                   e.preventDefault();
-                  const target = document.querySelector('#contact');
-                  if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                  }
                   setOpen(false);
+                  
+                  setTimeout(() => {
+                    const target = document.querySelector('#contact');
+                    if (target) {
+                      const yOffset = -70; 
+                      const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                  }, 50);
                 }} 
                 style={{ width: '100%', justifyContent: 'center' }}
               >
