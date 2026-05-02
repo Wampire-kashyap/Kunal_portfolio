@@ -39,8 +39,8 @@ function SkillBar({ name, pct, color }: { name: string; pct: number; color: stri
   )
 }
 
-const tools = [
-  'SQL', 'Python', 'Excel', 'Power BI', 'Pandas', 'NumPy'
+const SKILLS = [
+  'Python', 'SQL', 'Excel', 'Power BI', 'Pandas', 'NumPy'
 ]
 
 export default function Skills({ skills = [] }: { skills?: Skill[] }) {
@@ -88,7 +88,7 @@ export default function Skills({ skills = [] }: { skills?: Skill[] }) {
               Also worked with
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center' }}>
-              {tools.map(tool => (
+              {SKILLS.map(tool => (
                 <span key={tool} className="tech-badge">{tool}</span>
               ))}
             </div>

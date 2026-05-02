@@ -25,13 +25,13 @@ export default function About() {
           <SectionReveal direction="left">
             <div>
               <p style={{ color: 'rgba(226,232,240,0.75)', lineHeight: 1.85, marginBottom: '1.5rem', fontSize: '0.97rem' }}>
-                I&apos;m <strong style={{ color: '#e2e8f0' }}>Kunal</strong>, a Data Analyst focused on turning raw data into clear, actionable insights. I’m driven by understanding <em style={{ color: '#00f5ff' }}>why things happen</em> — not just reporting what happened.
+                I&apos;m <strong style={{ color: '#e2e8f0' }}>Kunal</strong>, a data analyst focused on turning raw data into insights that drive real decisions. I enjoy working with messy datasets, uncovering patterns, and building solutions that actually get used.
               </p>
               <p style={{ color: 'rgba(226,232,240,0.75)', lineHeight: 1.85, marginBottom: '1.5rem', fontSize: '0.97rem' }}>
-                I work with <strong style={{ color: '#a855f7' }}>SQL, Python, and Power BI</strong> to build end-to-end analytics solutions—from data cleaning and exploration to dashboards that support real business decisions.
+                I work mainly with <strong style={{ color: '#a855f7' }}>Python, SQL, Excel, and Power BI</strong> to build dashboards, automate workflows, and analyze business data end-to-end. My goal is always the same — make data simple, clear, and useful.
               </p>
               <p style={{ color: 'rgba(226,232,240,0.75)', lineHeight: 1.85, fontSize: '0.97rem' }}>
-                I believe effective analysis goes beyond numbers—it's about delivering clarity and enabling smarter, faster decisions with confidence.
+                Currently, I&apos;m improving my skills in analytics engineering and machine learning while building projects that solve real-world problems and strengthen my data thinking.
               </p>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem' }}>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 50, fontSize: '0.85rem', color: '#e2e8f0' }}>

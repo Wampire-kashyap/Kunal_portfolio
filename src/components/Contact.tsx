@@ -113,8 +113,7 @@ export default function Contact() {
                 Let&apos;s build something together
               </h3>
               <p style={{ color: '#64748b', lineHeight: 1.8, fontSize: '0.92rem', marginBottom: '2rem' }}>
-                Whether you&apos;re a startup that needs their first analytics foundation, an enterprise looking to
-                optimize reporting, or a recruiter with an exciting role — I&apos;d love to hear from you.
+                I'm open to data analyst roles, internships, and freelance opportunities. If you have a project or role in mind, feel free to reach out.
               </p>
 
               {/* Social links */}

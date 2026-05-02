@@ -2,9 +2,15 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
+const HERO_TITLE = "Turning Data into Decisions"
+const HERO_SUBTITLE = "I build analytics systems that transform raw data into clear, actionable insights."
+const HERO_TAGS = ["Python", "SQL", "Excel", "Power BI"]
+const ONE_LINER = "Focused on solving real business problems using data."
+
 const TITLES = [
-  'Data Analyst',
-  'SQL • Excel • Python • Power BI'
+  HERO_TITLE,
+  HERO_TAGS.join(' • '),
+  ONE_LINER
 ]
 
 export default function Hero() {
@@ -136,8 +142,7 @@ export default function Hero() {
           marginBottom: '2.5rem',
         }}
       >
-        Transforming raw data into compelling stories. Building dashboards that drive
-        decisions. Passionate about the intersection of analytics and impact.
+        {HERO_SUBTITLE}
       </motion.p>
 
       {/* CTAs */}

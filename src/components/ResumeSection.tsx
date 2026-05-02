@@ -13,7 +13,7 @@ export default function ResumeSection({ resumeUrl, videoData }: { resumeUrl?: st
               My Profile
             </p>
             <h2 className="section-title neon-text">Resume & Video</h2>
-            <p className="section-subtitle">Get to know me better</p>
+            <p className="section-subtitle">Download my resume or watch a short video introduction to understand my approach to data and problem-solving.</p>
           </div>
         </SectionReveal>
 
