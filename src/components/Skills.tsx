@@ -1,60 +1,26 @@
 'use client'
-import { useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
 import SectionReveal from './SectionReveal'
-
 import type { Skill } from '@/types'
 
-const CATEGORY_MAP = {
-  languages: { label: 'Languages & Queries', color: '#00f5ff' },
-  visualization: { label: 'Visualization', color: '#a855f7' },
-  ml: { label: 'Libraries & ML', color: '#3b82f6' },
-  tools: { label: 'Tools & Platforms', color: '#10b981' },
-}
-
-function SkillBar({ name, pct, color }: { name: string; pct: number; color: string }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-30px' })
-
-  return (
-    <div ref={ref} style={{ marginBottom: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-        <span style={{ fontSize: '0.82rem', fontWeight: 500, color: '#e2e8f0' }}>{name}</span>
-        <span style={{ fontSize: '0.78rem', fontWeight: 600, color }}>{pct}%</span>
-      </div>
-      <div className="skill-bar-track">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: inView ? `${pct}%` : 0 }}
-          transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1], delay: 0.1 }}
-          style={{
-            height: '100%',
-            borderRadius: 3,
-            background: `linear-gradient(90deg, ${color}, #a855f7)`,
-            boxShadow: `0 0 10px ${color}66`,
-          }}
-        />
-      </div>
-    </div>
-  )
-}
-
-const SKILLS = [
-  'Python', 'SQL', 'Excel', 'Power BI', 'Pandas', 'NumPy'
+const SKILL_GROUPS = [
+  {
+    title: "Core Skills",
+    description: "Daily-use tools for data analysis and dashboarding",
+    skills: ["Python", "SQL", "Excel", "Power BI"]
+  },
+  {
+    title: "Libraries & Tools",
+    description: "Used in projects for data processing and visualization",
+    skills: ["Pandas", "NumPy", "Matplotlib"]
+  },
+  {
+    title: "Currently Exploring",
+    description: "Actively improving and learning",
+    skills: ["Machine Learning", "Statistics"]
+  }
 ]
 
 export default function Skills({ skills = [] }: { skills?: Skill[] }) {
-  const [activeGroup, setActiveGroup] = useState(0)
-
-  // Group the dynamic skills
-  const groupedSkills = Object.entries(CATEGORY_MAP).map(([key, info]) => {
-    return {
-      label: info.label,
-      color: info.color,
-      items: (skills || []).filter(s => s.category === key).sort((a, b) => (a.order || 0) - (b.order || 0))
-    }
-  })
-
   return (
     <section id="skills" className="section-wrapper grid-bg">
       <div className="container-pad">
@@ -66,34 +32,98 @@ export default function Skills({ skills = [] }: { skills?: Skill[] }) {
           <p className="section-subtitle">Technologies I work with daily</p>
         </SectionReveal>
 
-        <div className="skill-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-          {groupedSkills.map((group, gi) => (
-            <SectionReveal key={group.label} delay={gi * 0.1}>
-              <div className="glass-card" style={{ padding: '1.75rem', height: '100%', transition: 'all 0.3s ease' }} data-hover>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: group.color, marginBottom: '1.25rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                  {group.label}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', 
+          gap: '1.5rem', 
+          marginTop: '2.5rem' 
+        }}>
+          {SKILL_GROUPS.map((group, gi) => (
+            <SectionReveal key={group.title} delay={gi * 0.1}>
+              <div 
+                className="skill-group-card glass-card"
+                data-hover
+                style={{
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(0, 245, 255, 0.15)',
+                  borderRadius: '16px',
+                  padding: '2rem',
+                  height: '100%',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-5px)'
+                  e.currentTarget.style.boxShadow = '0 8px 30px rgba(0, 245, 255, 0.15)'
+                  e.currentTarget.style.borderColor = 'rgba(0, 245, 255, 0.4)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)'
+                  e.currentTarget.style.borderColor = 'rgba(0, 245, 255, 0.15)'
+                }}
+              >
+                <h3 style={{ 
+                  fontSize: '1.15rem', 
+                  fontWeight: 700, 
+                  color: '#00f5ff', 
+                  marginBottom: '0.5rem',
+                  letterSpacing: '0.05em'
+                }}>
+                  {group.title}
                 </h3>
-                {group.items.map(s => (
-                  <SkillBar key={s._id} name={s.name} pct={s.level} color={group.color} />
-                ))}
+                <p style={{ 
+                  fontSize: '0.85rem', 
+                  color: '#94a3b8', 
+                  marginBottom: '1.8rem',
+                  lineHeight: 1.6,
+                  flexGrow: 1
+                }}>
+                  {group.description}
+                </p>
+                
+                <div style={{ 
+                  display: 'flex', 
+                  flexWrap: 'wrap', 
+                  gap: '0.6rem' 
+                }}>
+                  {group.skills.map(skill => (
+                    <span 
+                      key={skill} 
+                      style={{
+                        padding: '0.4rem 0.9rem',
+                        background: 'rgba(0, 245, 255, 0.04)',
+                        border: '1px solid rgba(0, 245, 255, 0.2)',
+                        borderRadius: '50px',
+                        fontSize: '0.82rem',
+                        fontWeight: 500,
+                        color: '#e2e8f0',
+                        transition: 'all 0.3s ease',
+                        cursor: 'default'
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.background = 'rgba(0, 245, 255, 0.12)'
+                        e.currentTarget.style.borderColor = 'rgba(0, 245, 255, 0.5)'
+                        e.currentTarget.style.boxShadow = '0 0 12px rgba(0, 245, 255, 0.2)'
+                        e.currentTarget.style.color = '#ffffff'
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.background = 'rgba(0, 245, 255, 0.04)'
+                        e.currentTarget.style.borderColor = 'rgba(0, 245, 255, 0.2)'
+                        e.currentTarget.style.boxShadow = 'none'
+                        e.currentTarget.style.color = '#e2e8f0'
+                      }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
             </SectionReveal>
           ))}
         </div>
-
-        {/* Tools cloud */}
-        <SectionReveal>
-          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <p style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '1.25rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              Also worked with
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center' }}>
-              {SKILLS.map(tool => (
-                <span key={tool} className="tech-badge">{tool}</span>
-              ))}
-            </div>
-          </div>
-        </SectionReveal>
       </div>
     </section>
   )
