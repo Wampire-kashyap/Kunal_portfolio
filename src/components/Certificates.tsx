@@ -1,9 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import SectionReveal from './SectionReveal'
-import { urlFor } from '@/lib/sanity'
 import type { Certificate } from '@/types'
 
 const FALLBACK: Certificate[] = [
@@ -67,7 +65,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 }
 
 export default function Certificates({ certificates }: { certificates: Certificate[] }) {
-  const data = certificates.length > 0 ? certificates : FALLBACK
+  const data = certificates && certificates.length > 0 ? certificates : FALLBACK
   const [selected, setSelected] = useState<Certificate | null>(null)
 
   return (
@@ -140,19 +138,7 @@ export default function Certificates({ certificates }: { certificates: Certifica
                     </span>
                   )}
 
-                  {cert.credentialUrl && (
-                    <div style={{ marginTop: '1rem' }}>
-                      <a
-                        href={cert.credentialUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        style={{ fontSize: '0.75rem', color, textDecoration: 'none', fontWeight: 600 }}
-                      >
-                        View Credential →
-                      </a>
-                    </div>
-                  )}
+                  {/* Credential link removed as it is not in the type anymore */}
                 </motion.div>
               </SectionReveal>
             )
@@ -190,11 +176,7 @@ export default function Certificates({ certificates }: { certificates: Certifica
                   Issued: {new Date(selected.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </p>
               )}
-              {selected.credentialUrl && (
-                <a href={selected.credentialUrl} target="_blank" rel="noopener noreferrer" className="btn-glow" style={{ fontSize: '0.85rem' }}>
-                  View Credential
-                </a>
-              )}
+              {/* Modal Credential link removed */}
               <button onClick={() => setSelected(null)} style={{
                 marginLeft: '1rem', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '0.85rem'
               }}>

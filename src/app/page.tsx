@@ -24,6 +24,7 @@ async function getData() {
       client.fetch<VideoResume | null>(VIDEO_RESUME_QUERY),
       client.fetch<Skill[]>(SKILLS_QUERY),
     ])
+    console.log("SANITY CERTIFICATES:", certificates)
     return { projects, certificates, experiences, achievements, resume, videoResume, skills }
   } catch (err) {
     console.warn('Sanity fetch failed, using fallback data.', err)

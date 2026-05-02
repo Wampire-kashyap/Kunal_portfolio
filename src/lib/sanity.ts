@@ -21,7 +21,7 @@ export const PROJECTS_QUERY = `*[_type == "project"] | order(order asc, _created
 }`
 
 export const CERTIFICATES_QUERY = `*[_type == "certificate"] | order(date desc) {
-  _id, title, issuer, image, file, date, credentialUrl, category
+  _id, title, issuer, date, category, image{asset->{url}}
 }`
 
 export const EXPERIENCE_QUERY = `*[_type == "experience"] | order(order asc, _createdAt desc) {

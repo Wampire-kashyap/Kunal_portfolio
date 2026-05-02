@@ -15,13 +15,11 @@ export interface Certificate {
   _id: string
   title: string
   issuer: string
-  image?: any
-  file?: {
+  date: string
+  category?: string
+  image?: {
     asset: { url: string }
   }
-  date: string
-  credentialUrl?: string
-  category?: string
 }
 
 export interface Experience {
