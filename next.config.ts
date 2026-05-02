@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // @ts-expect-error Next.js config TS types sometimes miss this
+
   allowedDevOrigins: ['edginess-deprecate-dispatch.ngrok-free.dev'],
 }
 
