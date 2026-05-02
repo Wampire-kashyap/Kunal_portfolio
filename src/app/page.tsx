@@ -18,7 +18,7 @@ async function getData() {
     const [projects, certificates, experiences, achievements, resume, videoResume, skills] = await Promise.all([
       client.fetch<Project[]>(PROJECTS_QUERY),
       client.fetch<Certificate[]>(CERTIFICATES_QUERY),
-      client.fetch<Experience[]>(EXPERIENCE_QUERY),
+      client.fetch<ExperienceType[]>(EXPERIENCE_QUERY),
       client.fetch<Achievement[]>(ACHIEVEMENTS_QUERY),
       client.fetch<Resume | null>(RESUME_QUERY),
       client.fetch<VideoResume | null>(VIDEO_RESUME_QUERY),
