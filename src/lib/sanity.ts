@@ -7,7 +7,7 @@ export const client = createClient({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
 
-  // 🔥 IMPORTANT FIX (THIS SOLVES YOUR ISSUE)
+  // 🔥 IMPORTANT: always get fresh data
   useCdn: false,
 })
 
@@ -17,20 +17,16 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source)
 }
 
-// =====================
-// GROQ QUERIES
-// =====================
+/* ===================== */
+/* GROQ QUERIES */
+/* ===================== */
 
 export const PROJECTS_QUERY = `*[_type == "project"] | order(order asc, _createdAt desc) {
   _id,
   title,
   description,
   tools,
-  image{
-    asset->{
-      url
-    }
-  },
+  image{asset->{url}},
   github,
   liveUrl,
   category,
@@ -44,11 +40,7 @@ export const CERTIFICATES_QUERY = `*[_type == "certificate"] | order(date desc) 
   issuer,
   date,
   category,
-  image{
-    asset->{
-      url
-    }
-  }
+  image{asset->{url}}
 }`
 
 export const EXPERIENCE_QUERY = `*[_type == "experience"] | order(order asc, _createdAt desc) {
@@ -58,11 +50,7 @@ export const EXPERIENCE_QUERY = `*[_type == "experience"] | order(order asc, _cr
   duration,
   description,
   skills,
-  logo{
-    asset->{
-      url
-    }
-  },
+  logo{asset->{url}},
   current,
   order
 }`
