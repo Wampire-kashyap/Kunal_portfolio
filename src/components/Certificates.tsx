@@ -290,7 +290,7 @@ export default function Certificates({ certificates }: { certificates: Certifica
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={prefersReducedMotion ? { scale: 1, opacity: 1, y: 0 } : { scale: 0.94, opacity: 0, y: 14 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.24, ease: 'easeOut' }}
-              className="glass-card relative flex max-h-[calc(100dvh-1.5rem)] w-full max-w-4xl flex-col overflow-y-auto p-4 outline-none sm:max-h-[calc(100dvh-3rem)] sm:p-6"
+              className="glass-card relative flex max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl mx-auto flex-col overflow-y-auto p-4 outline-none sm:max-h-[calc(100dvh-3rem)] sm:p-6"
               onClick={e => e.stopPropagation()}
             >
               <button
@@ -304,20 +304,22 @@ export default function Certificates({ certificates }: { certificates: Certifica
               </button>
 
               {selectedImageUrl ? (
-                <div className="relative mb-6 h-[52dvh] min-h-56 w-full shrink-0 overflow-hidden rounded-lg border border-white/10 bg-slate-950/70 sm:h-[62dvh]">
+                <div className="relative mx-auto mb-6 w-full max-w-2xl overflow-hidden rounded-lg border border-white/10 bg-slate-950/70">
                   {!isModalImageLoaded && (
                     <div className="absolute inset-0 animate-pulse bg-slate-900/80" aria-hidden="true" />
                   )}
-                  <Image
-                    src={selectedImageUrl}
-                    alt={selected?.title ?? 'Certificate image'}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 896px"
-                    className={`object-contain transition-opacity duration-200 ${isModalImageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                    loading="eager"
-                    onLoadingComplete={() => setIsModalImageLoaded(true)}
-                    priority
-                  />
+                  <div className="relative aspect-[4/3] w-full">
+                    <Image
+                      src={selectedImageUrl}
+                      alt={selected?.title ?? 'Certificate image'}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 672px"
+                      className={`object-contain transition-opacity duration-200 ${isModalImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                      loading="eager"
+                      onLoadingComplete={() => setIsModalImageLoaded(true)}
+                      priority
+                    />
+                  </div>
                 </div>
               ) : (
                 <div className="mb-6 flex min-h-48 items-center justify-center rounded-lg border border-white/10 bg-slate-950/70 text-sm text-slate-500">
