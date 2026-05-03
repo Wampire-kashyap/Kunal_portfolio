@@ -2,25 +2,52 @@
 import SectionReveal from './SectionReveal'
 import type { Skill } from '@/types'
 
-const SKILL_GROUPS = [
+const FALLBACK_GROUPS = [
   {
-    title: "Core Skills",
-    description: "Daily-use tools for data analysis and dashboarding",
-    skills: ["Python", "SQL", "Excel", "Power BI"]
+    title: 'Core Skills',
+    description: 'Daily-use tools for data analysis and dashboarding',
+    skills: ['Python', 'SQL', 'Excel', 'Power BI']
   },
   {
-    title: "Libraries & Tools",
-    description: "Used in projects for data processing and visualization",
-    skills: ["Pandas", "NumPy", "Matplotlib"]
+    title: 'Libraries & Tools',
+    description: 'Used in projects for data processing and visualization',
+    skills: ['Pandas', 'NumPy', 'Matplotlib']
   },
   {
-    title: "Currently Exploring",
-    description: "Actively improving and learning",
-    skills: ["Machine Learning", "Statistics"]
+    title: 'Currently Exploring',
+    description: 'Actively improving and learning',
+    skills: ['Machine Learning', 'Statistics']
   }
 ]
 
+const CATEGORY_LABELS: Record<Skill['category'], string> = {
+  languages: 'Languages & Queries',
+  visualization: 'Visualization',
+  ml: 'Libraries & ML',
+  tools: 'Tools & Platforms',
+}
+
+function getSkillGroups(skills: Skill[]) {
+  if (!skills.length) return FALLBACK_GROUPS
+
+  const grouped = skills.reduce<Record<string, string[]>>((groups, skill) => {
+    if (!skill.name) return groups
+
+    const title = CATEGORY_LABELS[skill.category] ?? skill.category
+    groups[title] = [...(groups[title] ?? []), skill.name]
+    return groups
+  }, {})
+
+  return Object.entries(grouped).map(([title, groupSkills]) => ({
+    title,
+    description: '',
+    skills: groupSkills,
+  }))
+}
+
 export default function Skills({ skills = [] }: { skills?: Skill[] }) {
+  const groups = getSkillGroups(skills)
+
   return (
     <section id="skills" className="section-wrapper grid-bg">
       <div className="container-pad">
@@ -32,15 +59,15 @@ export default function Skills({ skills = [] }: { skills?: Skill[] }) {
           <p className="section-subtitle">Technologies I work with daily</p>
         </SectionReveal>
 
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', 
-          gap: '1.5rem', 
-          marginTop: '2.5rem' 
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '1.5rem',
+          marginTop: '2.5rem'
         }}>
-          {SKILL_GROUPS.map((group, gi) => (
+          {groups.map((group, gi) => (
             <SectionReveal key={group.title} delay={gi * 0.1}>
-              <div 
+              <div
                 className="skill-group-card glass-card"
                 data-hover
                 style={{
@@ -65,33 +92,36 @@ export default function Skills({ skills = [] }: { skills?: Skill[] }) {
                   e.currentTarget.style.borderColor = 'rgba(0, 245, 255, 0.15)'
                 }}
               >
-                <h3 style={{ 
-                  fontSize: '1.15rem', 
-                  fontWeight: 700, 
-                  color: '#00f5ff', 
+                <h3 style={{
+                  fontSize: '1.15rem',
+                  fontWeight: 700,
+                  color: '#00f5ff',
                   marginBottom: '0.5rem',
                   letterSpacing: '0.05em'
                 }}>
                   {group.title}
                 </h3>
-                <p style={{ 
-                  fontSize: '0.85rem', 
-                  color: '#94a3b8', 
-                  marginBottom: '1.8rem',
-                  lineHeight: 1.6,
-                  flexGrow: 1
-                }}>
-                  {group.description}
-                </p>
-                
-                <div style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: '0.6rem' 
+                {group.description && (
+                  <p style={{
+                    fontSize: '0.85rem',
+                    color: '#94a3b8',
+                    marginBottom: '1.8rem',
+                    lineHeight: 1.6,
+                    flexGrow: 1
+                  }}>
+                    {group.description}
+                  </p>
+                )}
+
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.6rem',
+                  marginTop: group.description ? 0 : '1rem'
                 }}>
                   {group.skills.map(skill => (
-                    <span 
-                      key={skill} 
+                    <span
+                      key={skill}
                       style={{
                         padding: '0.4rem 0.9rem',
                         background: 'rgba(0, 245, 255, 0.04)',

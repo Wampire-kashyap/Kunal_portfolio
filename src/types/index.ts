@@ -1,9 +1,11 @@
+import type { SanityImageSource } from '@sanity/image-url'
+
 export interface Project {
   _id: string
   title: string
   description: string
   tools: string[]
-  image?: any
+  image?: SanityImageSource | { asset?: { url?: string } }
   github?: string
   liveUrl?: string
   category?: string
@@ -29,7 +31,7 @@ export interface Experience {
   duration: string
   description: string[]
   skills: string[]
-  logo?: any
+  logo?: SanityImageSource | { asset?: { url?: string } }
   current?: boolean
   order?: number
 }

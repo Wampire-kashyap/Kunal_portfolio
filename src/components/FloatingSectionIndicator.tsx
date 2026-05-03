@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 
 const SECTIONS = ['hero', 'about', 'skills', 'resume', 'projects', 'certificates', 'experience', 'achievements', 'contact']
 

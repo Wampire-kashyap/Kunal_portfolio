@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import SectionReveal from './SectionReveal'
 import { motion } from 'framer-motion'
 
@@ -113,7 +113,7 @@ export default function Contact() {
                 Let&apos;s build something together
               </h3>
               <p style={{ color: '#64748b', lineHeight: 1.8, fontSize: '0.92rem', marginBottom: '2rem' }}>
-                I'm open to data analyst roles, internships, and freelance opportunities. If you have a project or role in mind, feel free to reach out.
+                I&apos;m open to data analyst roles, internships, and freelance opportunities. If you have a project or role in mind, feel free to reach out.
               </p>
 
               {/* Social links */}

@@ -1,5 +1,23 @@
-import { client, PROJECTS_QUERY, CERTIFICATES_QUERY, EXPERIENCE_QUERY, ACHIEVEMENTS_QUERY, RESUME_QUERY, VIDEO_RESUME_QUERY, SKILLS_QUERY } from '@/lib/sanity'
-import type { Project, Certificate, Experience as ExperienceType, Achievement, Resume, VideoResume, Skill } from '@/types'
+import {
+  client,
+  PROJECTS_QUERY,
+  CERTIFICATES_QUERY,
+  EXPERIENCE_QUERY,
+  ACHIEVEMENTS_QUERY,
+  RESUME_QUERY,
+  VIDEO_RESUME_QUERY,
+  SKILLS_QUERY
+} from '@/lib/sanity'
+
+import type {
+  Project,
+  Certificate,
+  Experience as ExperienceType,
+  Achievement,
+  Resume,
+  VideoResume,
+  Skill
+} from '@/types'
 
 import ClientLayer from '@/components/ClientLayer'
 import Navbar from '@/components/Navbar'
@@ -13,9 +31,19 @@ import Achievements from '@/components/Achievements'
 import Contact from '@/components/Contact'
 import ResumeSection from '@/components/ResumeSection'
 
+export const revalidate = 0
+
 async function getData() {
   try {
-    const [projects, certificates, experiences, achievements, resume, videoResume, skills] = await Promise.all([
+    const [
+      projects,
+      certificates,
+      experiences,
+      achievements,
+      resume,
+      videoResume,
+      skills
+    ] = await Promise.all([
       client.fetch<Project[]>(PROJECTS_QUERY),
       client.fetch<Certificate[]>(CERTIFICATES_QUERY),
       client.fetch<ExperienceType[]>(EXPERIENCE_QUERY),
@@ -24,26 +52,48 @@ async function getData() {
       client.fetch<VideoResume | null>(VIDEO_RESUME_QUERY),
       client.fetch<Skill[]>(SKILLS_QUERY),
     ])
-    console.log("SANITY CERTIFICATES:", certificates)
-    return { projects, certificates, experiences, achievements, resume, videoResume, skills }
+
+    return {
+      projects: projects ?? [],
+      certificates: certificates ?? [],
+      experiences: experiences ?? [],
+      achievements: achievements ?? [],
+      resume,
+      videoResume,
+      skills: skills ?? []
+    }
+
   } catch (err) {
-    console.warn('Sanity fetch failed, using fallback data.', err)
-    return { projects: [], certificates: [], experiences: [], achievements: [], resume: null, videoResume: null, skills: [] }
+    console.error('Sanity fetch failed:', err)
+
+    return {
+      projects: [],
+      certificates: [],
+      experiences: [],
+      achievements: [],
+      resume: null,
+      videoResume: null,
+      skills: []
+    }
   }
 }
 
 export default async function HomePage() {
-  const { projects, certificates, experiences, achievements, resume, videoResume, skills } = await getData()
+  const {
+    projects,
+    certificates,
+    experiences,
+    achievements,
+    resume,
+    videoResume,
+    skills
+  } = await getData()
 
   return (
     <>
-      {/* Client-only elements */}
       <ClientLayer />
-
-      {/* Navigation */}
       <Navbar />
 
-      {/* Page sections */}
       <main style={{ position: 'relative', zIndex: 1 }}>
         <Hero />
         <About />
@@ -56,10 +106,18 @@ export default async function HomePage() {
         <Contact />
       </main>
 
-      {/* Footer */}
-      <footer style={{ padding: '3rem 1rem', textAlign: 'center', borderTop: '1px solid rgba(0,245,255,0.1)', position: 'relative', zIndex: 1, background: 'rgba(2, 5, 16, 0.9)' }}>
-        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }} suppressHydrationWarning>
-          © 2026 <span style={{ color: '#00f5ff' }}>Kunal</span>. Built with Next.js &amp; Sanity. Designed for impact. Engineered with precision.
+      <footer
+        style={{
+          padding: '3rem 1rem',
+          textAlign: 'center',
+          borderTop: '1px solid rgba(0,245,255,0.1)',
+          position: 'relative',
+          zIndex: 1,
+          background: 'rgba(2, 5, 16, 0.9)'
+        }}
+      >
+        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
+          &copy; {new Date().getFullYear()} <span style={{ color: '#00f5ff' }}>Kunal</span>. Built with Next.js & Sanity.
         </p>
       </footer>
     </>

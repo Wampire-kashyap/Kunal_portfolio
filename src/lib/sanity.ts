@@ -2,12 +2,18 @@ import { createClient } from '@sanity/client'
 import { createImageUrlBuilder } from '@sanity/image-url'
 import type { SanityImageSource } from '@sanity/image-url'
 
-export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
+const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01'
 
-  // 🔥 IMPORTANT: always get fresh data
+if (!projectId || !dataset) {
+  throw new Error('Missing required Sanity environment variables.')
+}
+
+export const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
   useCdn: false,
 })
 
@@ -17,9 +23,15 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source)
 }
 
-/* ===================== */
-/* GROQ QUERIES */
-/* ===================== */
+export function imageUrl(source: SanityImageSource | { asset?: { url?: string } } | null | undefined) {
+  if (!source) return null
+
+  if (typeof source === 'object' && 'asset' in source && source.asset?.url) {
+    return source.asset.url
+  }
+
+  return builder.image(source as SanityImageSource).url()
+}
 
 export const PROJECTS_QUERY = `*[_type == "project"] | order(order asc, _createdAt desc) {
   _id,

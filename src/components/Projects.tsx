@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import SectionReveal from './SectionReveal'
-import { urlFor } from '@/lib/sanity'
+import { imageUrl } from '@/lib/sanity'
 import type { Project } from '@/types'
 
 const FALLBACK_PROJECTS: Project[] = [
@@ -59,14 +59,27 @@ const FALLBACK_PROJECTS: Project[] = [
   },
 ]
 
-const CATEGORIES = ['All', 'Data Analysis', 'Machine Learning', 'Dashboard', 'Visualization']
+const DEFAULT_CATEGORIES = ['Data Analysis', 'Machine Learning', 'Dashboard', 'Visualization']
+
+function normalizeCategory(category?: string | null) {
+  return category?.trim().toLowerCase() ?? ''
+}
 
 export default function Projects({ projects }: { projects: Project[] }) {
-  const data = projects.length > 0 ? projects : FALLBACK_PROJECTS
+  const data = projects?.length > 0 ? projects : FALLBACK_PROJECTS
   const [filter, setFilter] = useState('All')
   const [hovered, setHovered] = useState<string | null>(null)
 
-  const filtered = filter === 'All' ? data : data.filter(p => p.category === filter)
+  const categorySet = new Set(data.map(project => project.category?.trim()).filter(Boolean) as string[])
+  const categories = [
+    'All',
+    ...DEFAULT_CATEGORIES.filter(category => categorySet.has(category)),
+    ...Array.from(categorySet).filter(category => !DEFAULT_CATEGORIES.includes(category)),
+  ]
+
+  const filtered = filter === 'All'
+    ? data
+    : data.filter(project => normalizeCategory(project.category) === normalizeCategory(filter))
 
   return (
     <section id="projects" className="section-wrapper">
@@ -82,7 +95,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
         {/* Filter tabs */}
         <SectionReveal delay={0.1}>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
-            {CATEGORIES.map(cat => (
+            {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
@@ -135,9 +148,9 @@ export default function Projects({ projects }: { projects: Project[] }) {
               >
                 {/* Image or gradient header */}
                 <div style={{ height: 160, position: 'relative', overflow: 'hidden' }}>
-                  {project.image ? (
+                  {imageUrl(project.image) ? (
                     <Image
-                      src={urlFor(project.image).width(600).height(320).url()}
+                      src={imageUrl(project.image)!}
                       alt={project.title}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
