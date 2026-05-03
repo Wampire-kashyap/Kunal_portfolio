@@ -52,6 +52,8 @@ export const CERTIFICATES_QUERY = `*[_type == "certificate"] | order(date desc) 
   issuer,
   date,
   category,
+  link,
+  skills,
   image{asset->{_id, url}}
 }`
 

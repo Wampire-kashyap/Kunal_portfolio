@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import SectionReveal from './SectionReveal'
@@ -69,7 +69,86 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function Certificates({ certificates }: { certificates: Certificate[] }) {
   const data = certificates && certificates.length > 0 ? certificates : FALLBACK
   const [selected, setSelected] = useState<Certificate | null>(null)
+  const [isModalImageLoaded, setIsModalImageLoaded] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const modalRef = useRef<HTMLDivElement | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+  const overlayPointerStartedRef = useRef(false)
   const selectedImageUrl = imageUrl(selected?.image)
+
+  const openCertificate = (certificate: Certificate) => {
+    setIsModalImageLoaded(false)
+    setSelected(certificate)
+  }
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updateMotionPreference = () => setPrefersReducedMotion(mediaQuery.matches)
+
+    updateMotionPreference()
+    mediaQuery.addEventListener('change', updateMotionPreference)
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateMotionPreference)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!selected) return
+
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    const originalOverflow = document.body.style.overflow
+    const originalPaddingRight = document.body.style.paddingRight
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelected(null)
+        return
+      }
+
+      if (event.key !== 'Tab' || !modalRef.current) {
+        return
+      }
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      )
+      const firstFocusable = focusableElements[0]
+      const lastFocusable = focusableElements[focusableElements.length - 1]
+
+      if (!firstFocusable || !lastFocusable) {
+        event.preventDefault()
+        modalRef.current.focus()
+        return
+      }
+
+      if (event.shiftKey && document.activeElement === firstFocusable) {
+        event.preventDefault()
+        lastFocusable.focus()
+      } else if (!event.shiftKey && document.activeElement === lastFocusable) {
+        event.preventDefault()
+        firstFocusable.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    document.body.style.overflow = 'hidden'
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`
+    }
+    window.setTimeout(() => {
+      closeButtonRef.current?.focus()
+    }, 0)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = originalOverflow
+      document.body.style.paddingRight = originalPaddingRight
+      previousFocusRef.current?.focus()
+    }
+  }, [selected])
 
   return (
     <section id="certificates" className="section-wrapper grid-bg">
@@ -89,11 +168,19 @@ export default function Certificates({ certificates }: { certificates: Certifica
             return (
               <SectionReveal key={cert._id} delay={i * 0.07}>
                 <motion.div
-                  className="glass-card"
+                  className="glass-card focus:outline-none focus:ring-2 focus:ring-cyan-400/50"
                   style={{ padding: '1.5rem', cursor: 'pointer' }}
                   whileHover={{ y: -6, scale: 1.02 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() => setSelected(cert)}
+                  onClick={() => openCertificate(cert)}
+                  onKeyDown={event => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      openCertificate(cert)
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
                   data-hover
                 >
                   {/* Top bar accent */}
@@ -154,7 +241,19 @@ export default function Certificates({ certificates }: { certificates: Certifica
                     </span>
                   )}
 
-                  {/* Credential link removed as it is not in the type anymore */}
+                  {(cert?.skills?.length ?? 0) > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.85rem' }}>
+                      {cert.skills?.map((skill, skillIndex) => (
+                        <span
+                          key={`${cert._id}-${skill}-${skillIndex}`}
+                          className="tech-badge"
+                          style={{ fontSize: '0.68rem', padding: '0.18rem 0.55rem' }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               </SectionReveal>
             )
@@ -166,49 +265,109 @@ export default function Certificates({ certificates }: { certificates: Certifica
       <AnimatePresence>
         {selected && (
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
-              zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              padding: '1.5rem', backdropFilter: 'blur(8px)',
+            exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
+            className="fixed inset-0 z-[2000] flex items-center justify-center overflow-hidden bg-black/85 p-3 backdrop-blur-md sm:p-6"
+            onPointerDown={event => {
+              overlayPointerStartedRef.current = event.target === event.currentTarget
             }}
-            onClick={() => setSelected(null)}
+            onPointerUp={event => {
+              if (overlayPointerStartedRef.current && event.target === event.currentTarget) {
+                setSelected(null)
+              }
+              overlayPointerStartedRef.current = false
+            }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="certificate-modal-title"
           >
             <motion.div
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.85, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-              className="glass-card"
-              style={{ maxWidth: 480, width: '100%', padding: '2rem' }}
+              ref={modalRef}
+              tabIndex={-1}
+              initial={prefersReducedMotion ? false : { scale: 0.94, opacity: 0, y: 14 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? { scale: 1, opacity: 1, y: 0 } : { scale: 0.94, opacity: 0, y: 14 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.24, ease: 'easeOut' }}
+              className="glass-card relative flex max-h-[calc(100dvh-1.5rem)] w-full max-w-4xl flex-col overflow-y-auto p-4 outline-none sm:max-h-[calc(100dvh-3rem)] sm:p-6"
               onClick={e => e.stopPropagation()}
             >
-              {selectedImageUrl && (
-                <div style={{ position: 'relative', width: '100%', height: 240, borderRadius: 10, overflow: 'hidden', marginBottom: '1.5rem', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <button
+                ref={closeButtonRef}
+                type="button"
+                onClick={() => setSelected(null)}
+                className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-slate-950/80 text-slate-400 transition hover:border-white/20 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-400/60"
+                aria-label="Close certificate preview"
+              >
+                ×
+              </button>
+
+              {selectedImageUrl ? (
+                <div className="relative mb-6 h-[52dvh] min-h-56 w-full shrink-0 overflow-hidden rounded-lg border border-white/10 bg-slate-950/70 sm:h-[62dvh]">
+                  {!isModalImageLoaded && (
+                    <div className="absolute inset-0 animate-pulse bg-slate-900/80" aria-hidden="true" />
+                  )}
                   <Image
                     src={selectedImageUrl}
-                    alt={selected.title}
+                    alt={selected?.title ?? 'Certificate image'}
                     fill
-                    sizes="(max-width: 640px) 100vw, 480px"
-                    style={{ objectFit: 'contain', background: 'rgba(2,5,16,0.7)' }}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 896px"
+                    className={`object-contain transition-opacity duration-200 ${isModalImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                    loading="eager"
+                    onLoadingComplete={() => setIsModalImageLoaded(true)}
+                    priority
                   />
                 </div>
+              ) : (
+                <div className="mb-6 flex min-h-48 items-center justify-center rounded-lg border border-white/10 bg-slate-950/70 text-sm text-slate-500">
+                  Certificate image unavailable
+                </div>
               )}
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#e2e8f0', marginBottom: '0.5rem' }}>{selected.title}</h3>
-              {selected.issuer && <p style={{ color: '#64748b', marginBottom: '0.5rem' }}>{selected.issuer}</p>}
-              {selected.date && (
-                <p style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '1.5rem' }}>
+
+              <div className="pr-10">
+                <h3 id="certificate-modal-title" className="mb-2 text-lg font-extrabold text-slate-200 sm:text-xl">{selected?.title}</h3>
+                {selected?.issuer && <p className="mb-2 text-sm text-slate-500">{selected.issuer}</p>}
+              </div>
+
+              {selected?.date && (
+                <p className="mb-4 text-xs text-slate-600">
                   Issued: {new Date(selected.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </p>
               )}
-              {/* Modal Credential link removed */}
-              <button onClick={() => setSelected(null)} style={{
-                marginLeft: '1rem', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '0.85rem'
-              }}>
-                Close
-              </button>
+
+              {(selected?.skills?.length ?? 0) > 0 && (
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {selected.skills?.map((skill, skillIndex) => (
+                    <span
+                      key={`${selected._id}-${skill}-${skillIndex}`}
+                      className="tech-badge"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-4">
+                {selected?.link && (
+                  <a
+                    href={selected.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-blue-400 transition hover:text-blue-300 hover:underline"
+                  >
+                    View Certificate →
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setSelected(null)}
+                  className="text-sm text-slate-500 transition hover:text-slate-300"
+                >
+                  Close
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
