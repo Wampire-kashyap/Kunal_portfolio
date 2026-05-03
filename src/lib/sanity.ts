@@ -38,7 +38,7 @@ export const PROJECTS_QUERY = `*[_type == "project"] | order(order asc, _created
   title,
   description,
   tools,
-  image{asset->{url}},
+  image{asset->{_id, url}},
   github,
   liveUrl,
   category,
@@ -52,7 +52,7 @@ export const CERTIFICATES_QUERY = `*[_type == "certificate"] | order(date desc) 
   issuer,
   date,
   category,
-  image{asset->{url}}
+  image{asset->{_id, url}}
 }`
 
 export const EXPERIENCE_QUERY = `*[_type == "experience"] | order(order asc, _createdAt desc) {
@@ -62,7 +62,7 @@ export const EXPERIENCE_QUERY = `*[_type == "experience"] | order(order asc, _cr
   duration,
   description,
   skills,
-  logo{asset->{url}},
+  logo{asset->{_id, url}},
   current,
   order
 }`

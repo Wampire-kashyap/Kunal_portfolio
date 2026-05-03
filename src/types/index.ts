@@ -19,9 +19,7 @@ export interface Certificate {
   issuer: string
   date: string
   category?: string
-  image?: {
-    asset: { url: string }
-  }
+  image?: SanityImageSource | { asset?: { _id?: string; url?: string } }
 }
 
 export interface Experience {

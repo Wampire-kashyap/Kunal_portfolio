@@ -44,13 +44,13 @@ async function getData() {
       videoResume,
       skills
     ] = await Promise.all([
-      client.fetch<Project[]>(PROJECTS_QUERY),
-      client.fetch<Certificate[]>(CERTIFICATES_QUERY),
-      client.fetch<ExperienceType[]>(EXPERIENCE_QUERY),
-      client.fetch<Achievement[]>(ACHIEVEMENTS_QUERY),
-      client.fetch<Resume | null>(RESUME_QUERY),
-      client.fetch<VideoResume | null>(VIDEO_RESUME_QUERY),
-      client.fetch<Skill[]>(SKILLS_QUERY),
+      client.fetch<Project[]>(PROJECTS_QUERY, {}, { cache: 'no-store' }),
+      client.fetch<Certificate[]>(CERTIFICATES_QUERY, {}, { cache: 'no-store' }),
+      client.fetch<ExperienceType[]>(EXPERIENCE_QUERY, {}, { cache: 'no-store' }),
+      client.fetch<Achievement[]>(ACHIEVEMENTS_QUERY, {}, { cache: 'no-store' }),
+      client.fetch<Resume | null>(RESUME_QUERY, {}, { cache: 'no-store' }),
+      client.fetch<VideoResume | null>(VIDEO_RESUME_QUERY, {}, { cache: 'no-store' }),
+      client.fetch<Skill[]>(SKILLS_QUERY, {}, { cache: 'no-store' }),
     ])
 
     return {

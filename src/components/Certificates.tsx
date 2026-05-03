@@ -1,7 +1,9 @@
 'use client'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import SectionReveal from './SectionReveal'
+import { imageUrl } from '@/lib/sanity'
 import type { Certificate } from '@/types'
 
 const FALLBACK: Certificate[] = [
@@ -67,6 +69,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function Certificates({ certificates }: { certificates: Certificate[] }) {
   const data = certificates && certificates.length > 0 ? certificates : FALLBACK
   const [selected, setSelected] = useState<Certificate | null>(null)
+  const selectedImageUrl = imageUrl(selected?.image)
 
   return (
     <section id="certificates" className="section-wrapper grid-bg">
@@ -82,6 +85,7 @@ export default function Certificates({ certificates }: { certificates: Certifica
         <div className="cert-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
           {data.map((cert, i) => {
             const color = CATEGORY_COLORS[cert.category || ''] || '#00f5ff'
+            const certificateImageUrl = imageUrl(cert.image)
             return (
               <SectionReveal key={cert._id} delay={i * 0.07}>
                 <motion.div
@@ -102,10 +106,22 @@ export default function Certificates({ certificates }: { certificates: Certifica
                       background: `${color}18`,
                       border: `1px solid ${color}33`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      overflow: 'hidden',
+                      position: 'relative',
                     }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8">
-                        <circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
-                      </svg>
+                      {certificateImageUrl ? (
+                        <Image
+                          src={certificateImageUrl}
+                          alt={cert.title}
+                          fill
+                          sizes="44px"
+                          style={{ objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8">
+                          <circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                        </svg>
+                      )}
                     </div>
                     {cert.date && (
                       <span style={{ fontSize: '0.72rem', color: '#475569', fontWeight: 500 }}>
@@ -169,6 +185,17 @@ export default function Certificates({ certificates }: { certificates: Certifica
               style={{ maxWidth: 480, width: '100%', padding: '2rem' }}
               onClick={e => e.stopPropagation()}
             >
+              {selectedImageUrl && (
+                <div style={{ position: 'relative', width: '100%', height: 240, borderRadius: 10, overflow: 'hidden', marginBottom: '1.5rem', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <Image
+                    src={selectedImageUrl}
+                    alt={selected.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 480px"
+                    style={{ objectFit: 'contain', background: 'rgba(2,5,16,0.7)' }}
+                  />
+                </div>
+              )}
               <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#e2e8f0', marginBottom: '0.5rem' }}>{selected.title}</h3>
               {selected.issuer && <p style={{ color: '#64748b', marginBottom: '0.5rem' }}>{selected.issuer}</p>}
               {selected.date && (
